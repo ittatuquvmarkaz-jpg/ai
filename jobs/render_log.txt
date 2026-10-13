@@ -5,3 +5,9 @@ seam at 922px (score 5.3) -> cropping
 seam at 922px (score 12.7) -> cropping
 seam at 914px (score 16.2) -> cropping
 {"video": "reels/batareya_02.mp4", "cover": "reels/batareya_02_cover.jpg", "duration": 37.451836}
+seam at 922px (score 13.6) -> cropping
+seam at 922px (score 21.5) -> cropping
+seam at 922px (score 5.3) -> cropping
+seam at 922px (score 12.7) -> cropping
+seam at 914px (score 16.2) -> cropping
+{"video": "reels/batareya_02.mp4", "cover": "reels/batareya_02_cover.jpg", "duration": 37.451836}
