@@ -147,17 +147,18 @@ def main(job_path, out_dir):
         if idx > 0 and lt < 0.12:
             fl = Image.new("RGBA", (W, H), (255, 255, 255, int(150 * (1 - lt / 0.12)))); im.alpha_composite(fl)
         if idx == 0:
-            k1 = 1 if cover_mode else back(lt / 0.45); k2 = 1 if cover_mode else back((lt - 0.15) / 0.45); k3 = 1 if cover_mode else back((lt - 0.35) / 0.4)
-            put(im, T1, W / 2, 330, clamp(k1 * 2), 0.7 + 0.3 * k1)
-            put(im, T2, W / 2, 520, clamp(k2 * 2), 0.7 + 0.3 * k2)
-            put(im, B, W / 2 + 250, 660, clamp(k3 * 2), 0.6 + 0.4 * k3)
+            # title is fully visible from frame 0 so the first frame works as the Instagram cover
+            pulse = 0 if cover_mode else 0.025 * math.sin(lt * 5)
+            put(im, T1, W / 2, 250, 1.0, 1.0 + pulse)
+            put(im, T2, W / 2, 430, 1.0, 1.0 + pulse)
+            put(im, B, W / 2 + 270, 570, 1.0, 1.0 - pulse)
         elif idx in LABELS:
-            k = back(lt / 0.4); put(im, LABELS[idx], W / 2, 300, clamp(k * 2), 0.6 + 0.4 * k)
+            k = back(lt / 0.4); put(im, LABELS[idx], W / 2, 170, clamp(k * 2), 0.6 + 0.4 * k)
         if not cover_mode:
             for (a0, a1, spr) in s["caps"]:
                 if a0 <= lt < a1:
-                    k = back((lt - a0) / 0.18); put(im, spr, W / 2, 1460, 1.0, 0.85 + 0.15 * k)
-        put(im, HANDLE, W / 2, 1800, 0.9)
+                    k = back((lt - a0) / 0.18); put(im, spr, W / 2, 1610, 1.0, 0.85 + 0.15 * k)
+        put(im, HANDLE, W / 2, 1830, 0.9)
         if not cover_mode:
             d = ImageDraw.Draw(im)
             d.rectangle([0, H - 14, int(W * t / total), H], fill=YEL + (255,))
