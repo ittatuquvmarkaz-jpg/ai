@@ -33,7 +33,24 @@ def clamp(x, a=0.0, b=1.0): return max(a, min(b, x))
 def ease(x): x = clamp(x); return 1 - (1 - x) ** 3
 def back(x, s=2.2): x = clamp(x) - 1; return x * x * ((s + 1) * x + s) + 1
 
+def drop_seam(img):
+    """Some generated images contain a hard horizontal panel seam in the upper part; keep the clean part below it."""
+    g = img.convert("L").resize((img.width // 4, img.height // 4))
+    w, h = g.size; px = g.load()
+    best, by = 0, None
+    for y in range(int(h * 0.12), int(h * 0.5)):
+        d = sum(abs(px[x, y] - px[x, y - 1]) for x in range(0, w, 2)) / (w / 2)
+        nb = sum(abs(px[x, y - 3] - px[x, y - 4]) for x in range(0, w, 2)) / (w / 2) + 1
+        score = d / nb
+        if d > 18 and score > best: best, by = score, y
+    if by and best > 4:
+        cut = by * 4 + 6
+        print(f"seam at {cut}px (score {best:.1f}) -> cropping", flush=True)
+        return img.crop((0, cut, img.width, img.height))
+    return img
+
 def cover_fit(img):
+    img = drop_seam(img)
     r = max(W / img.width, H / img.height)
     img = img.resize((math.ceil(img.width * r), math.ceil(img.height * r)), Image.LANCZOS)
     l, t = (img.width - W) // 2, (img.height - H) // 2
